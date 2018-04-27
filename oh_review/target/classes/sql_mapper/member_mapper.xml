@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace의 속성값은 bean 클래스 이름을 쓴다.  -->
+<mapper namespace="MemberBean">
+	<!-- 회원 정보 등록 -->
+	<insert id="memberInsert" parameterType="member">
+		INSERT INTO OH_MEMBER VALUES(
+		#{member_id}, #{member_password}, #{member_name}, 
+		#{member_blog}, #{member_email}, #{member_postcode},#{member_address},#{member_address_detail},'없음',#{member_img}
+		)
+	</insert>
+	<!-- Ajax 아이디 중복확인 -->
+	<select id="check_id" parameterType="member" resultType="int">
+		SELECT COUNT(*) FROM OH_MEMBER WHERE member_id = #{member_id}
+	</select>
+	<!-- Ajax 이메일 중복확인 -->
+	<select id="check_email" parameterType="member" resultType="int">
+		SELECT COUNT(*) FROM OH_MEMBER WHERE member_email = #{member_email}
+	</select>
+	<!-- 로그인 id 및 pw 대조 -->
+	<select id="LoginCheck" parameterType="member" resultType="member">
+		SELECT * FROM OH_MEMBER WHERE member_id=#{member_id} and member_password=#{member_password}
+	</select>
+<!-- 글목록-->
+<select id = "member_list" resultType = "member">
+ SELECT * FROM (
+	 SELECT ROWNUM RNUM,member_id,member_password,member_name,
+	 member_blog,member_email,member_address,member_address_detail,UPDATEDATE,member_img
+	 FROM (SELECT * FROM OH_MEMBER)) 
+	 WHERE RNUM BETWEEN #{start_num} AND #{end_num}
+</select>
+
+<!-- 목록카운트 -->
+<select id="memlistcnt" resultType="int">
+select count(*) from OH_MEMBER
+</select>
+	<!-- 마이페이지 -->
+	<select id = "member_mypage"  resultType = "member">
+		SELECT * FROM OH_MEMBER WHERE member_id=#{member_id}
+	</select> 
+	<!-- 정보 수정 -->
+	<update id="MemberModify"  >
+		UPDATE OH_MEMBER SET 	  		  member_password=#{member_password}, 
+													  member_blog=#{member_blog}, 
+													  member_email=#{member_email}, 
+													  member_postcode=#{member_postcode},
+													  member_address=#{member_address},
+													  member_address_detail=#{member_address_detail},
+													  UPDATEDATE=#{UPDATEDATE}
+													  WHERE member_id=#{member_id}
+	</update>
+	
+	<!-- 임시 비밀번호 업데이트 -->
+	<update id="update_pw" parameterType="member">
+		UPDATE OH_MEMBER SET member_password = #{member_password}
+		where member_id = #{member_id}
+	</update>
+	<!-- 아이디 찾기 -->
+	<select id="find_id_action" parameterType="member" resultType="member">
+		SELECT * FROM OH_MEMBER WHERE member_name=#{member_name,jdbcType=NVARCHAR} and member_email=#{member_email,jdbcType=NVARCHAR}
+	</select>
+	<!-- 회원 탈퇴 -->
+<delete id = "member_delete">
+	DELETE FROM OH_MEMBER WHERE member_id=#{member_id}
+</delete> 
+</mapper>

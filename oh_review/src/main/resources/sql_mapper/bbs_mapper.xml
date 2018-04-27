@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace의 속성값은 bean 클래스 이름을 쓴다.  -->
+<mapper namespace="CampainBean">
+<!-- 게시글 작성 -->
+<insert id="write" parameterType="campain">
+		INSERT INTO BBS_EXPERIENCE VALUES(BBS_EXPERIENCE_SEQ.nextval, 
+		#{EXP_CATEGORIE}, #{EXP_CATEGORIE_DETAIL}, #{EXP_ADD_CITY}, 
+		#{EXP_ADD_DETAIL},#{EXP_RECRUIT_MEM},0,#{EXP_RECUIT_DATE},
+		#{EXP_TITLE},#{CONTENT_EXPERIENCE},#{CONTENT_ENTERPRICE}, 0, #{EXP_IMG})
+</insert>
+
+<!-- 글목록-->
+<select id = "list" resultType = "campain">
+ SELECT * FROM (
+	 SELECT ROWNUM RNUM,EXP_BBS_NUMBER,EXP_CATEGORIE,EXP_CATEGORIE_DETAIL,
+	 EXP_ADD_CITY,EXP_ADD_DETAIL,EXP_RECRUIT_MEM,EXP_APPLY_MEM,EXP_RECUIT_DATE,
+	 EXP_TITLE,CONTENT_EXPERIENCE,CONTENT_ENTERPRICE,EXP_IMG
+	 FROM (SELECT * FROM BBS_EXPERIENCE ORDER BY EXP_BBS_NUMBER DESC)) 
+	 WHERE RNUM BETWEEN #{start_num} AND #{end_num}
+</select>
+
+<!-- 목록카운트 -->
+<select id="listcnt" resultType="int">
+select count(*) from BBS_EXPERIENCE
+</select>
+
+
+<!-- 글목록(관리자) -->
+<select id = "admin_bbs_list" resultType = "campain">
+ SELECT * FROM (
+	 SELECT ROWNUM RNUM,EXP_BBS_NUMBER,EXP_CATEGORIE,EXP_CATEGORIE_DETAIL,
+	 EXP_ADD_CITY,EXP_ADD_DETAIL,EXP_RECRUIT_MEM,EXP_APPLY_MEM,EXP_RECUIT_DATE,
+	 EXP_TITLE,CONTENT_EXPERIENCE,CONTENT_ENTERPRICE,EXP_IMG
+	 FROM (SELECT * FROM BBS_EXPERIENCE ORDER BY EXP_BBS_NUMBER DESC)) 
+	 WHERE RNUM BETWEEN #{start_num} AND #{end_num}
+</select>
+
+<!-- 글목록(인기) -->
+<select id = "bbs_main" parameterType = "campain" resultType = "campain">
+ SELECT * FROM (SELECT ROWNUM RNUM,EXP_BBS_NUMBER,EXP_CATEGORIE,EXP_CATEGORIE_DETAIL,
+ EXP_ADD_CITY,EXP_ADD_DETAIL,EXP_RECRUIT_MEM,EXP_APPLY_MEM,EXP_RECUIT_DATE,
+ EXP_TITLE,CONTENT_EXPERIENCE,CONTENT_ENTERPRICE,EXP_IMG
+FROM (SELECT * FROM BBS_EXPERIENCE ORDER BY EXP_HIT DESC)) WHERE RNUM BETWEEN 1 AND 6
+</select>
+
+<!-- 글목록(먹거리) -->
+<select id = "bbs_eat" parameterType = "campain" resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_CATEGORIE='먹거리' ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+<!-- 글목록(패션) -->
+<select id = "bbs_fashion" parameterType = "campain" resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_CATEGORIE='의류' ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+<!-- 글목록(여행/숙박) -->
+<select id = "bbs_trip" parameterType = "campain" resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_CATEGORIE='여행' OR EXP_CATEGORIE='숙박' ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+<!-- 글목록(뷰티/헬스케어) -->
+<select id = "bbs_beauty" parameterType = "campain" resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_CATEGORIE='뷰티' OR EXP_CATEGORIE='헬스케어' ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+<!-- 글목록(문화/생활) -->
+<select id = "bbs_culture" parameterType = "campain" resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_CATEGORIE='문화' OR EXP_CATEGORIE='생활' ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+<!-- 글목록(배송형) -->
+<select id = "bbs_delivery" parameterType = "campain" resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_CATEGORIE='배송형' ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+<!-- 조회수 -->
+<update id ="increaseViewcnt">
+	UPDATE BBS_EXPERIENCE SET EXP_HIT=EXP_HIT+1 WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</update>
+
+<!-- 조회수 -->
+<update id ="apply_count">
+	UPDATE BBS_EXPERIENCE SET EXP_APPLY_MEM=EXP_APPLY_MEM+1 WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</update>
+
+<!-- 상세보기 -->
+<select id = "view"  resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</select>
+
+<!-- 상세보기(관리자) -->
+<select id = "admin_content_modify"  resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</select>
+
+<!-- 캠페인 신청 -->
+<select id = "campain_apply"  resultType = "campain">
+	SELECT * FROM BBS_EXPERIENCE WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</select>
+
+<!-- 수정 -->
+<update id="modify"  >
+	UPDATE BBS_EXPERIENCE SET 	  EXP_CATEGORIE=#{EXP_CATEGORIE}, 
+												  EXP_CATEGORIE_DETAIL=#{EXP_CATEGORIE_DETAIL}, 
+												  EXP_ADD_CITY=#{EXP_ADD_CITY},
+												  EXP_ADD_DETAIL=#{EXP_ADD_DETAIL},
+												  EXP_RECRUIT_MEM=#{EXP_RECRUIT_MEM},
+												  EXP_RECUIT_DATE=#{EXP_RECUIT_DATE},
+												  EXP_TITLE=#{EXP_TITLE},
+												  CONTENT_EXPERIENCE=#{CONTENT_EXPERIENCE},
+												  CONTENT_ENTERPRICE=#{CONTENT_ENTERPRICE},
+												  EXP_IMG=#{EXP_IMG}
+												  WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</update>
+
+<!-- 삭제 -->
+<delete id = "delete">
+	DELETE FROM BBS_EXPERIENCE WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER}
+</delete> 
+
+<!-- 검색 (연결 연산자 사용) -->
+ <select id="searchList" parameterType="campain" resultType="campain">
+		SELECT * FROM BBS_EXPERIENCE WHERE upper(
+		EXP_CATEGORIE||EXP_CATEGORIE_DETAIL||EXP_ADD_CITY||EXP_ADD_DETAIL||EXP_TITLE) 
+		LIKE upper ('%' ||  #{search} || '%') ORDER BY EXP_BBS_NUMBER DESC
+</select>
+
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace의 속성값은 bean 클래스 이름을 쓴다.  -->
+<mapper namespace="ContactReplyBean" >	
+<!-- 댓글-->
+<insert id="cts_reply_action" parameterType="ctrb">
+		INSERT INTO CTS_REPLY VALUES(CTS_REPLY_SEQ.nextval,
+		#{CTS_NUMBER}, #{CTS_RP_CONTENT},#{CTS_RP_DATE})
+</insert>
+<!-- 댓글 목록-->
+<select id = "cts_reply_list" parameterType="ctrb" resultType = "ctrb">
+	SELECT * FROM CTS_REPLY WHERE CTS_NUMBER=#{CTS_NUMBER}
+</select>
+</mapper>

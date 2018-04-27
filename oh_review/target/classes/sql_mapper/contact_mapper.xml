@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContactBean">
+	<!-- 1:1 문의 등록 -->
+	<insert id="cts_write" parameterType="contact">
+		INSERT INTO BBS_CTS VALUES(
+		CTS_SEQ.nextval,
+		#{MEMBER_ID}, #{CTS_TITLE}, #{CTS_CATEGORIE}, 
+		#{CTS_CONTENT}, #{CTS_WRITE_DATE}
+		)
+	</insert>
+	<!-- 글목록-->
+	<select id = "cts_list" resultType = "contact">
+	 SELECT * FROM (
+		 SELECT ROWNUM RNUM,CTS_NUMBER,MEMBER_ID,CTS_TITLE,
+		 CTS_CATEGORIE,CTS_CONTENT,CTS_WRITE_DATE
+		 FROM (SELECT * FROM BBS_CTS ORDER BY CTS_NUMBER DESC)) 
+		 WHERE RNUM BETWEEN #{start_num} AND #{end_num}
+	</select>
+	
+	<!-- 목록카운트 -->
+	<select id="cts_listcnt" resultType="int">
+	select count(*) from BBS_CTS
+	</select>
+	
+	<!-- 상세보기 -->
+ 	<select id = "cts_view"  resultType = "contact">
+		SELECT * FROM BBS_CTS WHERE CTS_NUMBER=#{CTS_NUMBER}
+	</select> 
+	<!--글목록 쿼리문  -->
+	<select id="my_contact_list" parameterType="contact" resultType="contact">
+			SELECT * FROM BBS_CTS WHERE MEMBER_ID=#{MEMBER_ID} ORDER BY CTS_NUMBER
+	</select>
+</mapper> 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace의 속성값은 bean 클래스 이름을 쓴다.  -->
+<mapper namespace="ReviewBean" >	
+
+<!-- 댓글 달기 쿼리문 -->
+<insert id="review_reply" parameterType="review">
+		INSERT INTO REVIEW VALUES(REVIEW_SEQ.nextval,
+		#{EXP_BBS_NUMBER}, #{EXP_TITLE},#{MEMBER_ID},#{REV_CONTENT}, #{REV_DATE})
+</insert>
+	
+<!--글목록 쿼리문  -->
+<select id="replylist" parameterType="review" resultType="review">
+		SELECT * FROM REVIEW WHERE EXP_BBS_NUMBER=#{EXP_BBS_NUMBER} ORDER BY REV_NUM
+</select>
+	
+<!-- 글목록-->
+<select id = "review_list" parameterType="review" resultType = "review">
+	SELECT * FROM REVIEW WHERE MEMBER_ID=#{MEMBER_ID}
+</select>
+
+<!-- 글 삭제하기 쿼리문  -->
+<update id="review_delete"  >
+		DELETE FROM REVIEW WHERE REV_NUM=#{REV_NUM}
+</update>  
+</mapper>

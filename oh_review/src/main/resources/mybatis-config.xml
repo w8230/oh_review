@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias alias="member" type="com.a.b.vo.MemberBean"/>
+		<typeAlias alias="campain" type="com.a.b.vo.CampainBean"/>
+		<typeAlias alias="page" type="com.a.b.vo.PageBean"/>
+		<typeAlias alias="apply" type="com.a.b.vo.ApplyBean"/>
+		<typeAlias alias="review" type="com.a.b.vo.ReviewBean"/>
+		<typeAlias alias="contact" type="com.a.b.vo.ContactBean"/>
+		<typeAlias alias="ctrb" type="com.a.b.vo.ContactReplyBean"/>
+	</typeAliases>
+</configuration>

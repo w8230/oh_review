@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace의 속성값은 bean 클래스 이름을 쓴다.  -->
+<mapper namespace="ApplyBean">
+<!-- 게시글 작성 -->
+<insert id="apply" parameterType="apply">
+		INSERT INTO APPLY_CAMPAIN VALUES(APPLY_CAMPAIN_SEQ.nextval, 
+		#{EXP_BBS_NUMBER}, #{MEMBER_ID},#{EXP_TITLE}, #{APPLY_NAME}, 
+		#{APPLY_TEL},#{APPLY_BLOG},'대기')
+</insert>
+
+<!-- 캠페인 신청 목록-->
+<select id = "apply_mem_list" parameterType = "page" resultType = "apply">
+ SELECT * FROM (
+	 SELECT ROWNUM RNUM,APPLY_NUMBER,EXP_BBS_NUMBER,MEMBER_ID,
+	 APPLY_NAME,APPLY_TEL,APPLY_BLOG,APPLY_RESULT
+	 FROM (SELECT * FROM APPLY_CAMPAIN ORDER BY APPLY_NUMBER DESC)) 
+	 WHERE RNUM BETWEEN #{start_num} AND #{end_num}
+</select>
+
+<!-- 캠페인 신청 목록 카운트 -->
+<select id="applylistcnt" resultType="int">
+select count(*) from APPLY_CAMPAIN
+</select>
+
+<!-- 신청한 캠페인 목록(개인) -->
+<select id = "apply_list" parameterType="apply" resultType = "apply">
+	SELECT * FROM APPLY_CAMPAIN WHERE MEMBER_ID=#{MEMBER_ID} AND APPLY_RESULT='대기' OR APPLY_RESULT='반려'
+</select>
+
+<!-- 승인된 캠페인 목록(개인) -->
+<select id = "apply_ok_list" parameterType="apply" resultType = "apply">
+	<!-- SELECT * FROM APPLY_CAMPAIN WHERE MEMBER_ID=#{MEMBER_ID} AND APPLY_RESULT='승인' -->
+	SELECT * FROM OH_MEMBER E, APPLY_CAMPAIN D WHERE E.MEMBER_ID=#{MEMBER_ID} AND D.APPLY_RESULT='승인'
+</select>
+
+<!-- 리뷰 작성 페이지 (개인)  -->
+<select id = "review"  parameterType="apply" resultType = "apply">
+	SELECT * FROM APPLY_CAMPAIN WHERE APPLY_NUMBER=#{APPLY_NUMBER}
+</select>
+
+<!-- 캠페인 신청 조회(관리자)  -->
+<select id = "apply_view"  resultType = "apply">
+	SELECT * FROM APPLY_CAMPAIN WHERE APPLY_NUMBER=#{APPLY_NUMBER}
+</select>
+
+<!-- 처리 변경(관리자) -->
+<update id="apply_modify">
+	UPDATE APPLY_CAMPAIN SET
+	APPLY_RESULT=#{APPLY_RESULT}
+	WHERE APPLY_NUMBER=#{APPLY_NUMBER}
+</update>
+
+<!-- 글 삭제하기 쿼리문  -->
+<update id="apply_delete"  >
+		DELETE FROM APPLY_CAMPAIN WHERE APPLY_NUMBER=#{APPLY_NUMBER}
+</update>  
+</mapper>

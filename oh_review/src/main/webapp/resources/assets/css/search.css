@@ -1,0 +1,17 @@
+@charset "UTF-8";
+#imaginary_container{
+margin:auto;
+}
+.stylish-input-group .input-group-addon{
+    background: #3cb878 !important; 
+    border-color:#3cb878;
+}
+.stylish-input-group .form-control{
+	border-right:0; 
+	box-shadow:0 0 0; 
+	border-color:#3cb878;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
